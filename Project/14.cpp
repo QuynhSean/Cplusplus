@@ -19,6 +19,14 @@ public:
     }
     
 };
+class InvalidPhoneBException : public std::exception
+{
+public:
+    const char* what() const noexcept override {
+        return "Invalid Phone Exception";
+    }
+    
+};
 
 
 class Student 
@@ -27,13 +35,13 @@ protected:
     string fullName;
     string doB;
     string sex;
-    int phoneNumber;
+    string phoneNumber;
     string universityName;
     string gradeLevel;
     
 public:
     Student (string fullName_, string doB_, string sex_,
-     int phoneNumber_, string universityName_, string gradeLevel_);
+     string phoneNumber_, string universityName_, string gradeLevel_);
     virtual ~Student (){}
     virtual void ShowMyInfor () const = 0;
     bool isValidDOBFormat(const std::string& dob) const {
@@ -54,15 +62,29 @@ public:
 
 
     }
+bool isValidPhoneFormat(const std::string phone){
+    if (phone.length()!=10)
+    {
+        return false;
+    }
+    // Check if the phone number starts with one of the specified prefixes
+    std::vector<std::string> validPrefixes = {"090", "098", "091", "031", "035", "038"};
+    return std::any_of(validPrefixes.begin(), validPrefixes.end(),
+        [&phone](const std::string& prefix) {
+            return phone.compare(0, prefix.length(), prefix) == 0;
+                });
+    
+    
+}
+
 }; 
 
 
 Student ::Student (string fullName_, string doB_, string sex_,
-     int phoneNumber_, string universityName_, string gradeLevel_){
+     string phoneNumber_, string universityName_, string gradeLevel_){
      try {
-        fullName = fullName_;
-        doB = doB_;
         
+
         if ((fullName_.length() > 50)||(fullName_.length()<10))
         {
             throw InvalidFullNameException();
@@ -70,10 +92,16 @@ Student ::Student (string fullName_, string doB_, string sex_,
         
         
         
-        if (!isValidDOBFormat(doB))
+        if (!isValidDOBFormat(doB_))
         {
             throw InvalidDoBException();
         }
+
+        if(!isValidPhoneFormat(phoneNumber_)){
+            throw InvalidPhoneBException();
+        }
+        fullName = fullName_;
+        doB = doB_;
         
         sex = sex_;
         phoneNumber = phoneNumber_;
@@ -84,6 +112,12 @@ Student ::Student (string fullName_, string doB_, string sex_,
         }
         catch(const InvalidDoBException& e ){
             std::cout << e.what() << std::endl;
+        }
+        catch (const InvalidPhoneBException& e){
+            std::cout << e.what() << std::endl;
+        }
+        catch (const std::exception& e) {
+            std::cout << "Input files have unknown errors !!!" << std::endl;
         }
      
      }
@@ -97,7 +131,7 @@ private:
     string bestRewardName;
 public:
     GoodStudent(string fullName_, string doB_, string sex_,
-     int phoneNumber_, string universityName_, string gradeLevel_, double gpa_, string bestRewardName_):Student( fullName_,  doB_,  sex_,
+     string phoneNumber_, string universityName_, string gradeLevel_, double gpa_, string bestRewardName_):Student( fullName_,  doB_,  sex_,
       phoneNumber_,  universityName_,  gradeLevel_), gpa{gpa_}, bestRewardName{bestRewardName_}{}
     ~GoodStudent(){}
     void ShowMyInfor() const override {
@@ -111,7 +145,7 @@ private:
     double entryTestScore;
 public:
     NormalStudent(string fullName_, string doB_, string sex_,
-    int phoneNumber_, string universityName_, string gradeLevel_, double englishScore_, double entryTestScore_ )
+    string phoneNumber_, string universityName_, string gradeLevel_, double englishScore_, double entryTestScore_ )
         : Student(fullName_, doB_, sex_, phoneNumber_, universityName_, gradeLevel_), englishScore{englishScore_}, 
             entryTestScore{entryTestScore_}{}
     ~NormalStudent(){}
@@ -124,6 +158,6 @@ public:
 
 
 int main(){
-    GoodStudent good{"dinh thi quynh", "23/11/2001", "female",123, "hust", "good", 3.07, "good student"};
+    GoodStudent good{"dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student"};
     good.ShowMyInfor();
 }
