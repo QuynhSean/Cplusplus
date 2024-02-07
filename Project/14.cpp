@@ -135,7 +135,7 @@ public:
       phoneNumber_,  universityName_,  gradeLevel_), gpa{gpa_}, bestRewardName{bestRewardName_}{}
     ~GoodStudent(){}
     void ShowMyInfor() const override {
-        cout << fullName << " " << doB << " " <<sex <<" " << phoneNumber << " " << universityName << " " << gradeLevel << " " << gpa << bestRewardName << endl;
+        std::cout << fullName << " " << doB << " " <<sex <<" " << phoneNumber << " " << universityName << " " << gradeLevel << " " << gpa << bestRewardName << endl;
     }
 };
 class NormalStudent : public Student
@@ -155,9 +155,24 @@ public:
     }
 };
 
+vector <Student> selectStudent(const vector <Student>, const vector <NormalStudent>, const vector <GoodStudent>, const int recuit){
+    vector <GoodStudent> GoodStudent;
+    vector <NormalStudent> NormalStudent;
+    for(auto student: Student){
 
+    }
+
+}
 
 int main(){
+    std::vector<GoodStudent> allGoodStudent;
+    allGoodStudent.push_back("dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student");
+    
+    
+    
     GoodStudent good{"dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student"};
+    int numrecruit = 0;
+    cout << "num of  recuit:";
+    cin >> numrecruit; 
     good.ShowMyInfor();
 }
