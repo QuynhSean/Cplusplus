@@ -44,6 +44,7 @@ public:
      string phoneNumber_, string universityName_, string gradeLevel_);
     virtual ~Student (){}
     virtual void ShowMyInfor () const = 0;
+    string getfullname(){ return fullName;}
     bool isValidDOBFormat(const std::string& dob) const {
         // Use a regular expression to check if the date has the format dd/MM/YYYY
         std::regex dobRegex(R"(\d{2}/\d{2}/\d{4})");
@@ -137,6 +138,8 @@ public:
     void ShowMyInfor() const override {
         std::cout << fullName << " " << doB << " " <<sex <<" " << phoneNumber << " " << universityName << " " << gradeLevel << " " << gpa << bestRewardName << endl;
     }
+    double getgpa(){ return gpa;}
+
 };
 class NormalStudent : public Student
 {
@@ -153,26 +156,97 @@ public:
         cout << fullName << " " << doB << " " <<sex <<" " << phoneNumber << " " << universityName << " " << gradeLevel << englishScore << endl;
 
     }
+    double getEnglishScore(){ return englishScore;}
+    double getEntryTestScore(){ return entryTestScore;}
 };
-
-vector <Student> selectStudent(const vector <Student>, const vector <NormalStudent>, const vector <GoodStudent>, const int recuit){
-    vector <GoodStudent> GoodStudent;
-    vector <NormalStudent> NormalStudent;
-    for(auto student: Student){
-
+bool sortbygpa( GoodStudent& a,  GoodStudent& b){
+    if (a.getgpa() != b.getgpa() )
+    {
+        return a.getgpa() > b.getgpa();
     }
+    else if(a.getgpa() == b.getgpa()) {return a.getfullname() < b.getfullname();}
+    else 
+        {return false;}
+    
+    
+}
+bool sortbyentrycore(NormalStudent& a, NormalStudent& b){
+    if (a.getEntryTestScore() != b.getEntryTestScore())
+    {
+        return a.getEntryTestScore() > b.getEntryTestScore();
+    }
+    else if (a.getEntryTestScore() == b.getEntryTestScore())
+    {
+        if (a.getEnglishScore() != b.getEnglishScore())
+        {
+            return a.getEnglishScore() > b.getEnglishScore();
+        }
+        else {
+            return a.getfullname() < b.getfullname();
+        }
+        
+    }
+    else return false;
+    
+    
+}
+vector <Student*> selectStudent(vector <NormalStudent>& nomalstudent, vector <GoodStudent>& goodstudent, int recuit){
+    // vector <Student> select;
+    // if (goodstudent.size() > recuit)
+    // {
+    //     sort(goodstudent.begin(), goodstudent.end(), sortbygpa);
+    //     select.insert(select.end(), goodstudent.begin(), goodstudent.begin() + recuit);
+    // }
+    // else{
+    //     select.insert(select.begin(), goodstudent.begin(), goodstudent.end());
+    //     recuit -= goodstudent.size();
+    //     sort(nomalstudent.begin(), nomalstudent.end(), sortbyentrycore);
+    //     select.insert(select.end(), nomalstudent.begin(), nomalstudent.begin() + recuit);
+    // }
+    // return select;
+    vector<Student*> selected;
+    if (goodstudent.size() > recuit) {
+        sort(goodstudent.begin(), goodstudent.end(), sortbygpa);
+        for (int i = 0; i < recuit; ++i) {
+            selected.push_back(&goodstudent[i]);
+        }
+    } else {
+        for (auto& student : goodstudent) {
+            selected.push_back(&student);
+        }
+        recuit -= goodstudent.size();
+        sort(nomalstudent.begin(), nomalstudent.end(), sortbyentrycore);
+        for (int i = 0; i < recuit; ++i) {
+            selected.push_back(&nomalstudent[i]);
+        }
+    }
+    return selected;
 
 }
 
 int main(){
-    std::vector<GoodStudent> allGoodStudent;
-    allGoodStudent.push_back("dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student");
+    std::vector<GoodStudent> allGoodStudent = {
+        {"dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student"},
+        {"abhd cjduj", "24/11/2001", "male","0909341350", "hust", "good", 3.39, "good student"}
+    };
+    std::vector<NormalStudent> allNormalStudent = {
+        {"nguyen van a", "23/11/2001", "female","0909161350", "hust", "normal", 450, 9},
+        {"nguyen van b", "24/11/2001", "male","0909341350", "hust", "normal", 990, 7.5}
+    };
+    vector<Student*> selectedStudents = selectStudent(allNormalStudent, allGoodStudent, 4);
+    
+    cout << "Danh sach sinh vien duoc chon:" << endl;
+    for (const auto& student : selectedStudents) {
+        student->ShowMyInfor();
+}
+
+    return 0;
+        
     
     
-    
-    GoodStudent good{"dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student"};
-    int numrecruit = 0;
-    cout << "num of  recuit:";
-    cin >> numrecruit; 
-    good.ShowMyInfor();
+    // GoodStudent good{"dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student"};
+    // int numrecruit = 0;
+    // cout << "num of  recuit:";
+    // cin >> numrecruit; 
+    // good.ShowMyInfor();
 }
