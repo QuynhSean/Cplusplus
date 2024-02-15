@@ -44,7 +44,8 @@ public:
      string phoneNumber_, string universityName_, string gradeLevel_);
     virtual ~Student (){}
     virtual void ShowMyInfor () const = 0;
-    string getfullname(){ return fullName;}
+    string getfullname() const { return fullName;}
+    string getphoneNumber() const {return phoneNumber;}
     bool isValidDOBFormat(const std::string& dob) const {
         // Use a regular expression to check if the date has the format dd/MM/YYYY
         std::regex dobRegex(R"(\d{2}/\d{2}/\d{4})");
@@ -190,6 +191,12 @@ bool sortbyentrycore(NormalStudent& a, NormalStudent& b){
     
     
 }
+// bool sortbyname( Student& a,const Student& b){
+//     return a.getfullname() > b.getfullname();
+// }
+// bool sortbyphonenumber( Student& a, Student& b){
+//     return a.getphoneNumber() < b.getphoneNumber();
+// }
 vector <Student*> selectStudent(vector <NormalStudent>& nomalstudent, vector <GoodStudent>& goodstudent, int recuit){
     // vector <Student> select;
     // if (goodstudent.size() > recuit)
@@ -227,7 +234,7 @@ vector <Student*> selectStudent(vector <NormalStudent>& nomalstudent, vector <Go
 int main(){
     std::vector<GoodStudent> allGoodStudent = {
         {"dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student"},
-        {"abhd cjduj", "24/11/2001", "male","0909341350", "hust", "good", 3.39, "good student"}
+        {"jeni nguyen", "24/11/2001", "male","0909341350", "hust", "good", 3.39, "good student"}
     };
     std::vector<NormalStudent> allNormalStudent = {
         {"nguyen van a", "23/11/2001", "female","0909161350", "hust", "normal", 450, 9},
@@ -238,15 +245,10 @@ int main(){
     cout << "Danh sach sinh vien duoc chon:" << endl;
     for (const auto& student : selectedStudents) {
         student->ShowMyInfor();
-}
-
+    }
+    
     return 0;
         
     
     
-    // GoodStudent good{"dinh thi quynh", "23/11/2001", "female","0909161350", "hust", "good", 3.07, "good student"};
-    // int numrecruit = 0;
-    // cout << "num of  recuit:";
-    // cin >> numrecruit; 
-    // good.ShowMyInfor();
 }
